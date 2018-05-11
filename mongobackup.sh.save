@@ -1,0 +1,46 @@
+#!/bin/sh
+
+#=====================================================================
+# Set the following variables as per your requirement
+#=====================================================================
+# Database Name to backup
+MONGO_DATABASE="accounts"
+# Database host name
+MONGO_HOST="127.0.0.1"
+# Database port
+MONGO_PORT="27017"
+# Backup directory
+BACKUPS_DIR="/home/aravind/mongodbbackup/"
+# Database user name
+DBUSERNAME="username"
+# Database password
+DBPASSWORD="passw0rd"
+# Authentication database name
+DBAUTHDB="admin"
+# Days to keep the backup
+DAYSTORETAINBACKUP="14"
+#=====================================================================
+
+TIMESTAMP=`date +%F-%H%M`
+BACKUP_NAME="$MONGO_DATABASE-$TIMESTAMP"
+
+echo "Performing backup of $MONGO_DATABASE"
+echo "--------------------------------------------"
+# Create backup directory
+if ! mkdir -p $BACKUPS_DIR; then
+  echo "Can't create backup directory in $BACKUPS_DIR. Go and fix it!" 1>&2
+  exit 1;
+fi;
+# Create dump
+mongodump -d $MONGO_DATABASE -o $BACKUPS_DIR
+
+#git add
+git add 
+
+#commit the changes to git repository
+git commit -m "$BACKUP_NAME"
+
+#git push
+git push -u origin master
+
+echo "Database backup complete!"
